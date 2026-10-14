@@ -3,6 +3,14 @@
 APK sin conexión del juego web [JPTER78/pokesurvivor](https://github.com/JPTER78/pokesurvivor) (MIT).
 Es el mismo juego (HTML/JS original) dentro de un WebView, con lo online quitado.
 
+**Descargar:** el `.apk` está en [Releases](../../releases). En el móvil, ábrelo y permite
+"instalar apps de origen desconocido" cuando lo pida. Android 7.0 o superior.
+Las versiones nuevas se instalan encima sin perder la partida.
+
+Proyecto de fan sin ánimo de lucro. Todo el mérito del juego es de
+[JPTER78](https://github.com/JPTER78/pokesurvivor); este repo sólo lo empaqueta.
+Licencias en [LICENSE](LICENSE) (sprites de SpriteCollab: CC BY-NC 4.0).
+
 ## Qué cambia respecto a la web
 - Sin nube: `firebase-config.js` va a `null` → el juego arranca en su modo local y guarda en el móvil.
 - Sin cuenta: la primera vez sólo pide el nombre (`web/android.js` crea la cuenta local con una contraseña fija).

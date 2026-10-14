@@ -41,6 +41,9 @@ Copy-Item "$UP\css" "$WWW\css" -Recurse
 Copy-Item "$UP\js" "$WWW\js" -Recurse
 Copy-Item "$UP\assets" "$WWW\assets" -Recurse
 Copy-Item "$UP\favicon.ico" $WWW
+# Licencia MIT del juego y créditos de los sprites: tienen que ir con cada copia.
+Copy-Item "$UP\LICENSE" "$WWW\LICENSE.txt"
+Copy-Item "$UP\CREDITS.md" "$WWW\CREDITS.md"
 Remove-Item "$WWW\js\app.min.js", "$WWW\assets\og-image.jpg" -ErrorAction SilentlyContinue
 Copy-Item "$ROOT\web\android.js" "$WWW\js\android.js"
 Copy-Item "$ROOT\web\android.css" "$WWW\css\android.css"
