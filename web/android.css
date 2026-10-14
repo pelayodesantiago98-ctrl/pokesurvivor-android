@@ -1,0 +1,11 @@
+/* PokéSurvivor Android (un jugador): se esconde todo lo que necesita internet o cuenta. */
+#scr-login .tabs,
+#scr-login label[for="f-pass"], #f-pass,
+#f-forgot, #forgot-note,
+#btn-google, #btn-guest,
+#scr-login .note.center:last-child,
+#signup-closed,
+.menu-item[data-go="friends"],
+.menu-item[data-go="rank"],
+#btn-support, #btn-full, #btn-logout,
+#rotate { display: none !important; }
