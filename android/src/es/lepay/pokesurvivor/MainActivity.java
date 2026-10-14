@@ -1,6 +1,10 @@
 package es.lepay.pokesurvivor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +12,7 @@ import android.view.Window;
 import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -91,14 +96,38 @@ public class MainActivity extends Activity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
-                // Enlaces externos (créditos, aviso legal...) no se abren.
-                return !HOST.equals(req.getUrl().getHost());
+                Uri u = req.getUrl();
+                if (HOST.equals(u.getHost())) {
+                    // Dentro de la app sólo existe el juego (las páginas de guía/contacto de la web no van en el APK).
+                    String p = u.getPath();
+                    return !(p == null || p.equals("/") || p.equals("/index.html"));
+                }
+                // Enlaces de fuera (créditos, GitHub...): al navegador del móvil.
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, u));
+                } catch (ActivityNotFoundException e) {
+                    // sin navegador: no se hace nada
+                }
+                return true;
             }
         });
         web.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage m) {
                 Log.i("PokeSurvivor", m.messageLevel() + " " + m.message() + " (" + m.sourceId() + ":" + m.lineNumber() + ")");
+                return true;
+            }
+
+            // alert()/confirm() con el nombre del juego, no "La página https://appassets... dice:".
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                dialog(message, result, false);
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+                dialog(message, result, true);
                 return true;
             }
         });
@@ -108,6 +137,16 @@ public class MainActivity extends Activity {
         hideBars();
         if (state != null) web.restoreState(state);
         else web.loadUrl(HOME);
+    }
+
+    private void dialog(String message, final JsResult result, boolean cancelable) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                .setTitle("PokéSurvivor")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (d, w) -> result.confirm())
+                .setOnCancelListener(d -> result.cancel());
+        if (cancelable) b.setNegativeButton(android.R.string.cancel, (d, w) -> result.cancel());
+        b.show();
     }
 
     private WebResourceResponse asset(String path) {

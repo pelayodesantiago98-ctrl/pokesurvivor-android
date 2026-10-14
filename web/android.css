@@ -8,4 +8,5 @@
 .menu-item[data-go="friends"],
 .menu-item[data-go="rank"],
 #btn-support, #btn-full, #btn-logout,
+#set-logout, .set-row:has(#set-full), a[href="contacto/"],
 #rotate { display: none !important; }

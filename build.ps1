@@ -1,4 +1,4 @@
-<#
+﻿<#
   PokéSurvivor para Android (un jugador, sin conexión).
     .\build.ps1            -> dist\PokeSurvivor-<versión>.apk
     .\build.ps1 -Update    -> antes hace git pull del juego web (upstream\)
@@ -47,6 +47,19 @@ Copy-Item "$ROOT\web\android.css" "$WWW\css\android.css"
 
 # Sin nube: el juego entra solo en modo local.
 [IO.File]::WriteAllText("$WWW\js\core\firebase-config.js", "/* Android, un jugador: sin nube. */`nG.FIREBASE_CONFIG = null;`n", $utf8)
+
+# Textos de la web que en la app hablan del "navegador" (español y su clave en la traducción inglesa).
+$texts = [ordered]@{
+  'Cuenta de este navegador'        = 'Cuenta de este móvil'
+  'Guardado sólo en este navegador' = 'Guardado en este móvil'
+  "This browser\'s account"         = "This phone\'s account"
+  'Saved only in this browser'      = 'Saved on this phone'
+}
+foreach ($f in 'js\ui\settings-ui.js', 'js\ui\ui.js', 'js\data\lang-en.js') {
+  $s = [IO.File]::ReadAllText("$WWW\$f", $utf8)
+  foreach ($k in $texts.Keys) { $s = $s.Replace($k, $texts[$k]) }
+  [IO.File]::WriteAllText("$WWW\$f", $s, $utf8)
+}
 
 # Sin service worker de la PWA (la app ya lo tiene todo dentro).
 $mainJs = [IO.File]::ReadAllText("$WWW\js\main.js", $utf8)
